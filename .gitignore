@@ -1,0 +1,26 @@
+# IDE and editor settings
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Log files
+*.log
+
+# Database backups
+*.sql
+
+# Uploads (ignore all uploaded files but keep the directories)
+uploads/category/*
+!uploads/category/.gitkeep
+uploads/products/*
+!uploads/products/.gitkeep

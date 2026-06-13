@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main  # Triggers the deployment on push to the main branch
+  workflow_dispatch:  # Allows manual triggering of the workflow from the Actions tab
 
 jobs:
   web-deploy:
@@ -12,6 +13,25 @@ jobs:
     steps:
       - name: Get latest code
         uses: actions/checkout@v4
+
+      - name: Inject production database credentials
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+        run: |
+          node -e "
+            const fs = require('fs');
+            let content = fs.readFileSync('db.php', 'utf8');
+            content = content.replace('%%DB_HOST%%', process.env.DB_HOST);
+            content = content.replace('%%DB_PORT%%', process.env.DB_PORT);
+            content = content.replace('%%DB_USER%%', process.env.DB_USER);
+            content = content.replace('%%DB_PASS%%', process.env.DB_PASS);
+            content = content.replace('%%DB_NAME%%', process.env.DB_NAME);
+            fs.writeFileSync('db.php', content, 'utf8');
+          "
 
       - name: Sync files to Hostinger
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5

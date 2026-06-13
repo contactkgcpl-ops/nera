@@ -9,12 +9,12 @@ if ($_SERVER['SERVER_NAME'] === 'localhost' || $_SERVER['SERVER_NAME'] === '127.
     define('DB_NAME', 'salvin_db');
     define('IS_DEV', true);
 } else {
-    // Production (Hostinger) configuration - change these to match your Hostinger database details
-    define('DB_HOST', 'localhost');
-    define('DB_PORT', '3306');
-    define('DB_USER', 'u123456789_salvin_user');
-    define('DB_PASS', 'ProductionPasswordHere');
-    define('DB_NAME', 'u123456789_salvin_db');
+    // Production (Hostinger) configuration - replaced dynamically via GitHub Actions deployment
+    define('DB_HOST', '%%DB_HOST%%');
+    define('DB_PORT', '%%DB_PORT%%');
+    define('DB_USER', '%%DB_USER%%');
+    define('DB_PASS', '%%DB_PASS%%');
+    define('DB_NAME', '%%DB_NAME%%');
     define('IS_DEV', false);
 }
 

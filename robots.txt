@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /db.php
+Disallow: /api.php
+
+Sitemap: https://www.nerafoods.com/sitemap.xml

@@ -65,7 +65,7 @@ if (isset($_GET['msg'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salvin India - Admin Panel</title>
+    <title>Nera Foods - Admin Panel</title>
     <link rel="stylesheet" href="admin.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -74,7 +74,7 @@ if (isset($_GET['msg'])) {
 <body>
     <header class="admin-header">
         <a href="index.php" class="logo-link">
-            <h1>SALVIN INDIA <span style="font-weight: 300; font-size: 0.95rem; opacity: 0.8;">| Admin</span></h1>
+            <h1>NERA FOODS <span style="font-weight: 300; font-size: 0.95rem; opacity: 0.8;">| Admin</span></h1>
         </a>
         <nav class="admin-nav">
             <a href="index.php" class="active">Dashboard</a>

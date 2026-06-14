@@ -105,7 +105,7 @@ if (isset($_POST['update']) && $id > 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salvin India - Manage Category</title>
+    <title>Nera Foods - Manage Category</title>
     <link rel="stylesheet" href="admin.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -114,7 +114,7 @@ if (isset($_POST['update']) && $id > 0) {
 <body>
     <header class="admin-header">
         <a href="index.php" class="logo-link">
-            <h1>SALVIN INDIA <span style="font-weight: 300; font-size: 0.95rem; opacity: 0.8;">| Admin</span></h1>
+            <h1>NERA FOODS <span style="font-weight: 300; font-size: 0.95rem; opacity: 0.8;">| Admin</span></h1>
         </a>
         <nav class="admin-nav">
             <a href="index.php">Dashboard</a>

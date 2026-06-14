@@ -296,22 +296,38 @@ body {
 @media (min-width: 769px) {
     .hero-slide[data-bg*="mango"] {
         background-size: cover;
-        background-position: right top;
+        background-position: right bottom;
         background-color: #e6ece3;
         /* Soft green-gray background matching the mango image */
     }
 
     .hero-slide[data-bg*="honey"] {
         background-size: cover;
-        background-position: right top;
+        background-position: right bottom;
         background-color: #faf6ee;
         /* Warm cream background matching the honey image */
+    }
+
+    .hero-slide[data-bg*="protine"] {
+        background-size: cover;
+        background-position: right bottom;
+        background-color: #f6f6f6;
+        /* Light gray background matching protein powder image */
+    }
+
+    .hero-slide[data-bg*="source_chutneys"] {
+        background-size: cover;
+        background-position: right bottom;
+        background-color: #faf7f2;
+        /* Warm background matching sauces & chutneys image */
     }
 }
 
 /* Light overlay overrides for product slides to keep the images clear and bright */
 .hero-slide[data-bg*="mango"]::before,
-.hero-slide[data-bg*="honey"]::before {
+.hero-slide[data-bg*="honey"]::before,
+.hero-slide[data-bg*="protine"]::before,
+.hero-slide[data-bg*="source_chutneys"]::before {
     background:
         linear-gradient(to bottom, rgba(7, 28, 20, 0.4) 0%, rgba(7, 28, 20, 0) 25%),
         linear-gradient(to right, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 70%),
@@ -975,9 +991,17 @@ body {
 
     /* Set hero to single column centered layout */
     .hero {
-        min-height: auto;
+        min-height: 500px;
         background-position: center center;
         padding-bottom: 3rem;
+    }
+
+    .hero-slide.active {
+        position: absolute;
+    }
+
+    .hero-slide {
+        background-position: center bottom;
     }
 
     .hero-container {
@@ -5280,11 +5304,11 @@ body {
     .about-hero-title {
         font-size: 2.8rem;
     }
-    
+
     .about-cards-grid {
         gap: 1.5rem;
     }
-    
+
     .about-card {
         padding: 2.5rem 1.5rem;
     }
@@ -5294,42 +5318,42 @@ body {
     .about-hero-section {
         padding: 130px 4% 45px;
     }
-    
+
     .about-hero-title {
         font-size: 2.2rem;
     }
-    
+
     .about-hero-subtitle {
         font-size: 1rem;
         line-height: 1.6;
     }
-    
+
     .about-solutions-section {
         padding: 3.5rem 4%;
     }
-    
+
     .about-cards-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
         max-width: 480px;
         margin: 0 auto;
     }
-    
+
     .why-salvin-section {
         padding: 4rem 4% 4.5rem;
     }
-    
+
     .why-salvin-underline {
         margin-bottom: 2.5rem;
     }
-    
+
     .why-salvin-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 2rem 1rem;
         max-width: 480px;
         margin: 0 auto;
     }
-    
+
     .why-salvin-text {
         font-size: 0.85rem;
     }
@@ -5339,7 +5363,7 @@ body {
     .about-hero-title {
         font-size: 1.8rem;
     }
-    
+
     .why-salvin-grid {
         gap: 1.5rem 0.75rem;
     }
@@ -5610,7 +5634,9 @@ body {
 }
 
 @keyframes spinSubmit {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .btn-submit.loading .submit-spinner {
@@ -5653,6 +5679,7 @@ body {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -5664,12 +5691,12 @@ body {
     .contact-hero-title {
         font-size: 2.8rem;
     }
-    
+
     .contact-grid-container {
         grid-template-columns: 1fr;
         gap: 3rem;
     }
-    
+
     .contact-form-col {
         padding: 3rem 2rem;
     }
@@ -5679,20 +5706,20 @@ body {
     .contact-hero-section {
         padding: 130px 4% 45px;
     }
-    
+
     .contact-hero-title {
         font-size: 2.2rem;
     }
-    
+
     .contact-hero-subtitle {
         font-size: 1rem;
         line-height: 1.6;
     }
-    
+
     .contact-layout-section {
         padding: 3.5rem 4%;
     }
-    
+
     .form-row-2 {
         grid-template-columns: 1fr;
         gap: 1.5rem;
@@ -5703,17 +5730,17 @@ body {
     .contact-hero-title {
         font-size: 1.8rem;
     }
-    
+
     .contact-form-col {
         padding: 2.2rem 1.25rem;
         border-radius: 20px;
     }
-    
+
     .info-card {
         padding: 1.2rem;
         gap: 0.9rem;
     }
-    
+
     .info-icon-box {
         width: 38px;
         height: 38px;

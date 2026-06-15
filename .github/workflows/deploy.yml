@@ -45,7 +45,7 @@ jobs:
           protocol: ftp
           port: 21
           timeout: 900000
-          server-dir: public_html/
+          server-dir: ./
           exclude: |
             **/.git*
             **/.git*/**

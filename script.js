@@ -343,5 +343,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
         startTimer();
     }
+
+    // Fetch and render categories on homepage
+    async function loadHomepageCategories() {
+        const grid = document.getElementById('homepage-categories-grid');
+        if (!grid) return;
+
+        // Render skeleton loader
+        grid.innerHTML = Array(4).fill().map(() => `
+            <div class="category-skeleton-card">
+                <div class="category-skeleton-img"></div>
+                <div class="category-skeleton-text-1"></div>
+                <div class="category-skeleton-text-2"></div>
+            </div>
+        `).join('');
+
+        try {
+            const response = await fetch('api.php?action=categories');
+            const json = await response.json();
+            if (json.success && json.data.length > 0) {
+                grid.innerHTML = '';
+                json.data.forEach(cat => {
+                    const card = document.createElement('a');
+                    card.href = `products.html?category_id=${cat.id}`;
+                    card.className = 'category-card-home';
+                    card.innerHTML = `
+                        <div class="category-card-img-box">
+                            <img src="${escapeHtml(cat.image)}" alt="${escapeHtml(cat.name)}" loading="lazy">
+                            <div class="category-card-overlay"></div>
+                        </div>
+                        <div class="category-card-details">
+                            <h3 class="category-card-title">${escapeHtml(cat.name)}</h3>
+                            <span class="category-card-cta">
+                                View Products
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                    <polyline points="12 5 19 12 12 19" />
+                                </svg>
+                            </span>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } else {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">No categories found.</p>`;
+            }
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+            grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: red; padding: 40px;">Failed to load categories.</p>`;
+        }
+    }
+
+    // Helper: Escape HTML
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    loadHomepageCategories();
 });
 

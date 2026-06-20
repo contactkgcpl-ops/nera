@@ -138,9 +138,9 @@ if (isset($_GET['msg'])) {
                         <?php else: ?>
                             <?php foreach ($categories as $cat): ?>
                                 <tr>
-                                    <td>
-                                        <img src="../<?= htmlspecialchars($cat['image']) ?>" alt="<?= htmlspecialchars($cat['name']) ?>" class="td-thumbnail">
-                                    </td>
+                                     <td>
+                                         <img src="../<?= htmlspecialchars($cat['image']) ?>?t=<?= time() ?>" alt="<?= htmlspecialchars($cat['name']) ?>" class="td-thumbnail">
+                                     </td>
                                     <td style="font-weight: 600; color: var(--primary);"><?= htmlspecialchars($cat['name']) ?></td>
                                     <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-muted);"><?= htmlspecialchars($cat['image']) ?></td>
                                     <td>
@@ -183,9 +183,9 @@ if (isset($_GET['msg'])) {
                         <?php else: ?>
                             <?php foreach ($products as $prod): ?>
                                 <tr>
-                                    <td>
-                                        <img src="../<?= htmlspecialchars($prod['image']) ?>" alt="<?= htmlspecialchars($prod['name']) ?>" class="td-thumbnail" style="object-fit: contain; background: #f8fafc; padding: 2px;">
-                                    </td>
+                                     <td>
+                                         <img src="../<?= htmlspecialchars($prod['image']) ?>?t=<?= time() ?>" alt="<?= htmlspecialchars($prod['name']) ?>" class="td-thumbnail" style="object-fit: contain; background: #f8fafc; padding: 2px;">
+                                     </td>
                                     <td style="font-weight: 600; color: var(--primary);"><?= htmlspecialchars($prod['name']) ?></td>
                                     <td><span class="badge badge-category"><?= htmlspecialchars($prod['category_name']) ?></span></td>
                                     <td style="color: var(--text-muted); max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?= htmlspecialchars($prod['description']) ?></td>

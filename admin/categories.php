@@ -58,23 +58,45 @@ if (isset($_POST['update']) && $id > 0) {
         $errorMsg = "Category name cannot be empty.";
     } else {
         $targetPath = $category['image']; // Default to old image path
+        $uploadOk = true;
         
-        // Check if a new image was uploaded
-        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            // Delete old file first
-            if (file_exists(__DIR__ . '/../' . $category['image'])) {
-                @unlink(__DIR__ . '/../' . $category['image']);
+        // Check if a new file upload was attempted
+        if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+            if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                // Sanitize and rename new file
+                $sanitizedName = sanitize_filename($name);
+                $fileExt = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+                $newFileName = $sanitizedName . '.' . strtolower($fileExt);
+                $targetPath = 'uploads/category/' . $newFileName;
+                
+                // Move the file first, check if it succeeded
+                if (move_uploaded_file($_FILES['image']['tmp_name'], __DIR__ . '/../' . $targetPath)) {
+                    // Only delete the old file if it exists and has a different filename/path
+                    $oldPath = $category['image'];
+                    if ($oldPath !== $targetPath && file_exists(__DIR__ . '/../' . $oldPath)) {
+                        @unlink(__DIR__ . '/../' . $oldPath);
+                    }
+                } else {
+                    $errorMsg = "Failed to save the new image. Please check folder permissions.";
+                    $uploadOk = false;
+                }
+            } else {
+                $uploadOk = false;
+                switch ($_FILES['image']['error']) {
+                    case UPLOAD_ERR_INI_SIZE:
+                    case UPLOAD_ERR_FORM_SIZE:
+                        $errorMsg = "The uploaded image is too large. Please upload a smaller image.";
+                        break;
+                    case UPLOAD_ERR_PARTIAL:
+                        $errorMsg = "The image was only partially uploaded. Please try again.";
+                        break;
+                    default:
+                        $errorMsg = "Failed to upload image. PHP error code: " . $_FILES['image']['error'];
+                        break;
+                }
             }
-            
-            // Sanitize and rename new file
-            $sanitizedName = sanitize_filename($name);
-            $fileExt = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-            $newFileName = $sanitizedName . '.' . strtolower($fileExt);
-            $targetPath = 'uploads/category/' . $newFileName;
-            
-            move_uploaded_file($_FILES['image']['tmp_name'], __DIR__ . '/../' . $targetPath);
         } else {
-            // If the name changed, rename the existing file to match the new name
+            // No new image uploaded, rename existing image if category name changed
             $oldSanitized = sanitize_filename($category['name']);
             $newSanitized = sanitize_filename($name);
             
@@ -89,13 +111,15 @@ if (isset($_POST['update']) && $id > 0) {
             }
         }
         
-        // Update in DB
-        $stmt = $db->prepare("UPDATE categories SET name = ?, image = ? WHERE id = ?");
-        if ($stmt->execute([$name, $targetPath, $id])) {
-            header("Location: index.php?msg=cat_updated");
-            exit;
-        } else {
-            $errorMsg = "Failed to update category in database.";
+        // Update in DB only if file validation succeeded
+        if ($uploadOk) {
+            $stmt = $db->prepare("UPDATE categories SET name = ?, image = ? WHERE id = ?");
+            if ($stmt->execute([$name, $targetPath, $id])) {
+                header("Location: index.php?msg=cat_updated");
+                exit;
+            } else {
+                $errorMsg = "Failed to update category in database.";
+            }
         }
     }
 }
@@ -152,7 +176,7 @@ if (isset($_POST['update']) && $id > 0) {
                         <div class="current-image-preview">
                             <div>
                                 <span class="form-label" style="font-size: 0.8rem; margin-bottom: 0.25rem;">Current Image:</span>
-                                <img src="../<?= htmlspecialchars($category['image']) ?>" alt="Current Category Image">
+                                <img src="../<?= htmlspecialchars($category['image']) ?>?t=<?= time() ?>" alt="Current Category Image">
                             </div>
                             <span style="font-family: monospace; font-size: 0.78rem; color: var(--text-muted);"><?= htmlspecialchars($category['image']) ?></span>
                         </div>

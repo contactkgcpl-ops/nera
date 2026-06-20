@@ -159,9 +159,18 @@ if (isset($_GET['msg'])) {
 
         <!-- Products Table Block -->
         <div>
-            <div class="page-header" style="margin-bottom: 1rem;">
+            <div class="page-header" style="margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
                 <h3 class="page-title" style="font-size: 1.4rem;">Product List</h3>
-                <a href="products.php?action=add" class="btn btn-primary btn-sm">+ Add Product</a>
+                <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                    <input type="text" id="productSearch" class="form-control" placeholder="Search products..." style="width: 240px; padding: 0.4rem 0.75rem; font-size: 0.85rem; height: 36px;">
+                    <select id="categoryFilter" class="form-control" style="width: 180px; padding: 0.4rem 0.75rem; font-size: 0.85rem; height: 36px; cursor: pointer;">
+                        <option value="">All Categories</option>
+                        <?php foreach ($categories as $cat): ?>
+                            <option value="<?= htmlspecialchars($cat['name']) ?>"><?= htmlspecialchars($cat['name']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <a href="products.php?action=add" class="btn btn-primary btn-sm" style="height: 36px; padding: 0 1rem; font-size: 0.85rem;">+ Add Product</a>
+                </div>
             </div>
             <div class="table-card">
                 <table class="admin-table">
@@ -175,9 +184,9 @@ if (isset($_GET['msg'])) {
                             <th style="width: 150px;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="productTableBody">
                         <?php if (empty($products)): ?>
-                            <tr>
+                            <tr class="no-products-row">
                                 <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No products found. Click Add Product to create one!</td>
                             </tr>
                         <?php else: ?>
@@ -186,9 +195,9 @@ if (isset($_GET['msg'])) {
                                      <td>
                                          <img src="../<?= htmlspecialchars($prod['image']) ?>?t=<?= time() ?>" alt="<?= htmlspecialchars($prod['name']) ?>" class="td-thumbnail" style="object-fit: contain; background: #f8fafc; padding: 2px;">
                                      </td>
-                                    <td style="font-weight: 600; color: var(--primary);"><?= htmlspecialchars($prod['name']) ?></td>
-                                    <td><span class="badge badge-category"><?= htmlspecialchars($prod['category_name']) ?></span></td>
-                                    <td style="color: var(--text-muted); max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?= htmlspecialchars($prod['description']) ?></td>
+                                    <td class="product-name" style="font-weight: 600; color: var(--primary);"><?= htmlspecialchars($prod['name']) ?></td>
+                                    <td class="product-category"><span class="badge badge-category"><?= htmlspecialchars($prod['category_name']) ?></span></td>
+                                    <td class="product-description" style="color: var(--text-muted); max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?= htmlspecialchars($prod['description']) ?></td>
                                     <td style="font-weight: 500;"><?= htmlspecialchars($prod['rate']) ?></td>
                                     <td>
                                         <div class="actions-cell">
@@ -204,5 +213,66 @@ if (isset($_GET['msg'])) {
             </div>
         </div>
     </div>
+
+    <!-- Client-side product filtering script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const productSearch = document.getElementById('productSearch');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const productTableBody = document.getElementById('productTableBody');
+        const productRows = productTableBody.querySelectorAll('tr');
+
+        // Create and append a "no matching products" fallback row
+        const noMatchRow = document.createElement('tr');
+        noMatchRow.id = 'no-match-row';
+        noMatchRow.style.display = 'none';
+        noMatchRow.innerHTML = '<td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No matching products found.</td>';
+        productTableBody.appendChild(noMatchRow);
+
+        function filterProducts() {
+            const searchVal = productSearch.value.toLowerCase().trim();
+            const categoryVal = categoryFilter.value.toLowerCase().trim();
+            let visibleCount = 0;
+
+            productRows.forEach(row => {
+                // Skip the custom fallback rows
+                if (row.classList.contains('no-products-row') || row.id === 'no-match-row') return;
+
+                const nameEl = row.querySelector('.product-name');
+                const categoryEl = row.querySelector('.product-category');
+                const descEl = row.querySelector('.product-description');
+
+                const name = nameEl ? nameEl.textContent.toLowerCase() : '';
+                const category = categoryEl ? categoryEl.textContent.toLowerCase() : '';
+                const description = descEl ? descEl.textContent.toLowerCase() : '';
+
+                const matchesSearch = name.includes(searchVal) || description.includes(searchVal);
+                const matchesCategory = categoryVal === '' || category.includes(categoryVal);
+
+                if (matchesSearch && matchesCategory) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Handle fallback display logic
+            const hasNoProductsAtAll = productTableBody.querySelector('.no-products-row');
+            if (!hasNoProductsAtAll) {
+                if (visibleCount === 0) {
+                    noMatchRow.style.display = '';
+                } else {
+                    noMatchRow.style.display = 'none';
+                }
+            }
+        }
+
+        if (productSearch && categoryFilter) {
+            productSearch.addEventListener('input', filterProducts);
+            categoryFilter.addEventListener('change', filterProducts);
+        }
+    });
+    </script>
 </body>
 </html>
